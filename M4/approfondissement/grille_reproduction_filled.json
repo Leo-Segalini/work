@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-08-31T07:21:49.584792+00:00",
+  "author": "auto-audit (substitut phase 2 en autonomie)",
+  "rows": [
+    {
+      "check": "Environnement + tests (hors brief2 lent)",
+      "status": "reproduit",
+      "proof": "...............                                                          [100%] | 15 passed in 0.07s"
+    },
+    {
+      "check": "Run principal pipeline M4",
+      "status": "reproduit",
+      "proof": "  \"output\": \"/Users/segalini-briant/Documents/GitHub/atlas-cisia-s04/work/M4/results\" | }"
+    },
+    {
+      "check": "Run modèle RF",
+      "status": "reproduit",
+      "proof": "F1=0.782609"
+    },
+    {
+      "check": "Run retrieval",
+      "status": "reproduit",
+      "proof": "{\n  \"generated_at\": \"2026-08-31T07:21:48.594822+00:00\",\n  \"embedding_model\": \"sentence-transformers/all-MiniLM-L6-v2\",\n "
+    },
+    {
+      "check": "Échantillon citations / abstention",
+      "status": "reproduit",
+      "proof": ".....                                                                    [100%] | 5 passed in 0.01s"
+    },
+    {
+      "check": "Menaces (agent + extended)",
+      "status": "reproduit",
+      "proof": "....                                                                     [100%] | 4 passed in 0.06s"
+    },
+    {
+      "check": "Fuite test",
+      "status": "non testé",
+      "proof": "Oracle capteur/RAG hors dépôt — protocole window_id documenté"
+    },
+    {
+      "check": "Hypothèses implicites",
+      "status": "écart",
+      "proof": "Features incluent règles M3 — assumé et documenté"
+    }
+  ],
+  "counter_argument": "RF non validé sur test scellé ; lexical-first peut échouer sur requêtes sémantiques pures."
+}

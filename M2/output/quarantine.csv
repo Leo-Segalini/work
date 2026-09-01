@@ -1,0 +1,41 @@
+source_file,row_identifier,rule_id,column,observed_value,reason,decision
+equipment.csv,EQ-CHILL-128,EQ-DUP,equipment_id,EQ-CHILL-128,identifiant dupliqué,quarantine
+equipment.csv,EQ-CONV-222,EQ-DUP,equipment_id,EQ-CONV-222,identifiant dupliqué,quarantine
+equipment.csv,EQ-OVEN-366,EQ-DUP,equipment_id,EQ-OVEN-366,identifiant dupliqué,quarantine
+equipment.csv,EQ-ROBOT-390,EQ-DUP,equipment_id,EQ-ROBOT-390,identifiant dupliqué,quarantine
+equipment.csv,EQ-CHILL-128,EQ-DUP,equipment_id,EQ-CHILL-128,identifiant dupliqué,quarantine
+equipment.csv,EQ-CONV-222,EQ-DUP,equipment_id,EQ-CONV-222,identifiant dupliqué,quarantine
+equipment.csv,EQ-OVEN-366,EQ-DUP,equipment_id,EQ-OVEN-366,identifiant dupliqué,quarantine
+equipment.csv,EQ-ROBOT-390,EQ-DUP,equipment_id,EQ-ROBOT-390,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0022,EVT-DUP,event_id,EVT-2026S1-0022,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0155,EVT-DUP,event_id,EVT-2026S1-0155,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0314,EVT-DUP,event_id,EVT-2026S1-0314,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0432,EVT-DUP,event_id,EVT-2026S1-0432,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0022,EVT-DUP,event_id,EVT-2026S1-0022,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0155,EVT-DUP,event_id,EVT-2026S1-0155,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0314,EVT-DUP,event_id,EVT-2026S1-0314,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0432,EVT-DUP,event_id,EVT-2026S1-0432,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-0061,MNT-DUP,maintenance_id,MNT-2026S1-0061,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-0334,MNT-DUP,maintenance_id,MNT-2026S1-0334,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-0778,MNT-DUP,maintenance_id,MNT-2026S1-0778,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-1201,MNT-DUP,maintenance_id,MNT-2026S1-1201,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-1601,MNT-DUP,maintenance_id,MNT-2026S1-1601,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-0061,MNT-DUP,maintenance_id,MNT-2026S1-0061,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-0334,MNT-DUP,maintenance_id,MNT-2026S1-0334,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-0778,MNT-DUP,maintenance_id,MNT-2026S1-0778,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-1201,MNT-DUP,maintenance_id,MNT-2026S1-1201,identifiant dupliqué,quarantine
+maintenance_history.csv,MNT-2026S1-1601,MNT-DUP,maintenance_id,MNT-2026S1-1601,identifiant dupliqué,quarantine
+events.csv,EVT-2026S1-0102,EVT-SEV,severity,URGENT,"valeur hors domaine attendu ['critical', 'high', 'low', 'medium']",quarantine
+events.csv,EVT-2026S1-0265,EVT-TYPE,event_type,Incident ,"valeur hors domaine attendu ['alert', 'incident', 'intervention', 'observation']",quarantine
+maintenance_history.csv,MNT-2026S1-0912,MNT-TYPE,intervention_type,Correctif,"valeur hors domaine attendu ['calibration', 'corrective', 'inspection', 'preventive', 'replacement']",quarantine
+equipment.csv,EQ-COMP-169,EQ-NEG,rated_power_kw,-12.5,valeur numérique négative impossible,quarantine
+maintenance_history.csv,MNT-2026S1-0041,MNT-NEG,downtime_minutes,-45,valeur numérique négative impossible,quarantine
+maintenance_history.csv,MNT-2026S1-0703,MNT-NEG,parts_cost_eur,-350.0,valeur numérique négative impossible,quarantine
+events.csv,EVT-2026S1-0032,EVT-DATE,end_at,2026-04-09T19:50:00Z > 2026-04-09T17:50:00Z,date de fin antérieure à la date de début,quarantine
+maintenance_history.csv,MNT-2026S1-0621,MNT-DATE,closed_at,2026-06-14T17:55:00Z > 2026-06-14T14:55:00Z,date de fin antérieure à la date de début,quarantine
+events.csv,EVT-2026S1-0180,EVT-FK-EQ,equipment_id,EQ-ORPHAN-999,référence absente dans la table parente,quarantine
+maintenance_history.csv,MNT-2026S1-0545,MNT-FK-EQ,equipment_id,EQ-ORPHAN-998,référence absente dans la table parente,quarantine
+maintenance_history.csv,MNT-2026S1-0389,MNT-FK-EVT,event_id,EVT-ORPHAN-999,référence absente dans la table parente,quarantine
+maintenance_history.csv,MNT-2026S1-1121,PII-PHONE,work_order_note,Rappeler Nadia B. au 06 12 34 56 78.,information personnelle détectée (telephone),mask_and_keep
+maintenance_history.csv,MNT-2026S1-1121,PII-PERSON,work_order_note,Rappeler Nadia B. au 06 12 34 56 78.,information personnelle détectée (personne),mask_and_keep
+maintenance_history.csv,MNT-2026S1-1334,PII-EMAIL,work_order_note,Compte rendu transmis à leo.martin@example.test.,information personnelle détectée (email),mask_and_keep

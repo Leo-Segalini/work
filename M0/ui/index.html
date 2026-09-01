@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DiagOps M0 — Diagnostic</title>
+    <style>
+      :root {
+        --bg: #f3f5f7;
+        --surface: #ffffff;
+        --text: #15202b;
+        --muted: #3d4f5f;
+        --accent: #0b5fff;
+        --border: #c5d0db;
+        --error: #8b1a1a;
+        --ok: #0b5d3b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        background:
+          radial-gradient(circle at top left, #d9e6ff 0%, transparent 45%),
+          linear-gradient(180deg, #eef2f6 0%, var(--bg) 100%);
+        color: var(--text);
+        min-height: 100vh;
+        padding: 1.5rem;
+      }
+
+      main {
+        max-width: 42rem;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        margin: 0 0 0.35rem;
+      }
+
+      p.lead {
+        color: var(--muted);
+        margin: 0 0 1.25rem;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      form {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 1.25rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.35rem;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      input,
+      textarea {
+        font: inherit;
+        padding: 0.7rem 0.75rem;
+        border: 1px solid var(--border);
+        color: var(--text);
+        background: #fff;
+        min-height: 44px;
+      }
+
+      textarea {
+        min-height: 9rem;
+        resize: vertical;
+      }
+
+      button {
+        font: inherit;
+        font-weight: 600;
+        min-height: 44px;
+        padding: 0.7rem 1rem;
+        border: 2px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid #ffb703;
+        outline-offset: 2px;
+      }
+
+      button:hover {
+        filter: brightness(0.95);
+      }
+
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      pre {
+        margin-top: 1.25rem;
+        background: #0f1720;
+        color: #e8eef5;
+        padding: 1rem;
+        overflow: auto;
+        font-size: 0.95rem;
+        line-height: 1.45;
+      }
+
+      .status {
+        margin-top: 1rem;
+        font-weight: 600;
+      }
+
+      .status.ok {
+        color: var(--ok);
+      }
+
+      .status.err {
+        color: var(--error);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>DiagOps M0</h1>
+      <p class="lead">
+        Interface légère pour soumettre un rapport technicien à l’API
+        <code>POST /diagnose</code>.
+      </p>
+
+      <form id="diagnose-form" novalidate>
+        <label>
+          URL de l’API
+          <input
+            id="api-url"
+            name="api_url"
+            type="url"
+            value="http://127.0.0.1:8000"
+            required
+          />
+        </label>
+        <label>
+          report_id
+          <input
+            id="report-id"
+            name="report_id"
+            type="text"
+            value="RPT-2026S1-0001"
+            required
+          />
+        </label>
+        <label>
+          equipment_id (optionnel)
+          <input
+            id="equipment-id"
+            name="equipment_id"
+            type="text"
+            value="EQ-PUMP-001"
+          />
+        </label>
+        <label>
+          technician_note
+          <textarea id="technician-note" name="technician_note" required>
+Pompe P-204 en zone A. Vibration plus forte que d'habitude depuis la prise de poste. Bruit metallique au demarrage puis baisse apres quelques minutes. Temperature carter mesuree a 71 C.
+          </textarea>
+        </label>
+        <button type="submit" id="submit-btn">Diagnostiquer</button>
+      </form>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <pre id="result" hidden></pre>
+    </main>
+
+    <script>
+      const form = document.getElementById("diagnose-form");
+      const statusEl = document.getElementById("status");
+      const resultEl = document.getElementById("result");
+      const submitBtn = document.getElementById("submit-btn");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const apiUrl = document.getElementById("api-url").value.replace(/\/$/, "");
+        const reportId = document.getElementById("report-id").value.trim();
+        const equipmentId = document.getElementById("equipment-id").value.trim();
+        const note = document.getElementById("technician-note").value.trim();
+
+        if (!reportId || !note) {
+          statusEl.textContent = "report_id et technician_note sont obligatoires.";
+          statusEl.className = "status err";
+          return;
+        }
+
+        const payload = {
+          report_id: reportId,
+          technician_note: note,
+          equipment_id: equipmentId || null,
+        };
+
+        submitBtn.disabled = true;
+        statusEl.textContent = "Appel en cours…";
+        statusEl.className = "status";
+        resultEl.hidden = true;
+
+        try {
+          const response = await fetch(`${apiUrl}/diagnose`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await response.json().catch(() => ({ detail: "réponse non JSON" }));
+          resultEl.hidden = false;
+          resultEl.textContent = JSON.stringify(data, null, 2);
+          if (response.ok) {
+            statusEl.textContent = "Diagnostic reçu.";
+            statusEl.className = "status ok";
+          } else {
+            statusEl.textContent = `Erreur HTTP ${response.status}`;
+            statusEl.className = "status err";
+          }
+        } catch (error) {
+          statusEl.textContent = `Impossible de joindre l'API : ${error}`;
+          statusEl.className = "status err";
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

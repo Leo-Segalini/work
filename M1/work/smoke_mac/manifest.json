@@ -1,0 +1,8 @@
+{
+  "smoke": true,
+  "train_subset": 64,
+  "config": "configs/mac_smoke/lora_reference_mac.yaml",
+  "status": "completed",
+  "output_dir": "work/smoke_mac/lora_reference",
+  "note": "Sous-échantillon 64 ex., 1 epoch, batch 1 — non comparable au GPU commun. Ne pas utiliser pour promotion."
+}

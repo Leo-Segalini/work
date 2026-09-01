@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-08-31T07:21:23.861332+00:00",
+  "candidate_id": "diagops-2026-S1-m2-candidate-r2",
+  "checksums": [
+    {
+      "file": "equipment_update.csv",
+      "ok": true,
+      "reason": "ok"
+    },
+    {
+      "file": "events_batch_02.csv",
+      "ok": true,
+      "reason": "ok"
+    },
+    {
+      "file": "maintenance_batch_02.csv",
+      "ok": true,
+      "reason": "ok"
+    },
+    {
+      "file": "RELEASE_NOTES.md",
+      "ok": true,
+      "reason": "ok"
+    }
+  ],
+  "counts": {
+    "equipment_update": 30,
+    "equipment_inserts": 26,
+    "equipment_updates": 4,
+    "events_new": 80,
+    "maintenance_new": 220
+  },
+  "findings_total": 17,
+  "blocking": 16,
+  "warnings": 0,
+  "decision": "REJECTED",
+  "rationale": "16 anomalie(s) bloquante(s) — ne pas intégrer.",
+  "by_rule": {
+    "CAND-COLLISION": 2,
+    "CAND-DOM": 3,
+    "CAND-DUP": 6,
+    "CAND-FK": 5
+  }
+}

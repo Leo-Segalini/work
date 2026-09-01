@@ -1,0 +1,71 @@
+# Politique de qualification M2 — complément « aller plus loin »
+# Référence métier : contracts/schemas.py
+
+version: "2026-S1-r1"
+candidate_id: diagops-2026-S1-m2-candidate-r2
+
+decisions:
+  block: REJECTED
+  quarantine: REJECTED
+  warn: ACCEPTED_WITH_CONDITIONS
+  info: trace_only
+
+rules:
+  checksums:
+    id: CAND-CHK
+    manifest: checksums.sha256
+    on_failure: block
+
+  schema:
+    id: CAND-SCHEMA
+    source: src/data_pipeline/validation.py
+    on_missing_column: block
+
+  duplicate_ids:
+    id: CAND-DUP
+    keys:
+      equipment: equipment_id
+      events: event_id
+      maintenance: maintenance_id
+    on_failure: quarantine
+
+  collision_published:
+    id: CAND-COLLISION
+    compare_to: data_pack/2026-S1
+    keys:
+      events: event_id
+      maintenance: maintenance_id
+    on_failure: block
+
+  domains:
+    id: CAND-DOM
+    columns:
+      equipment.criticality: [low, medium, high, critical]
+      events.severity: [low, medium, high, critical]
+      events.event_type: [incident, intervention, observation, alert]
+      maintenance.intervention_type: [inspection, corrective, preventive, calibration, replacement]
+      maintenance.outcome: [resolved, monitoring, parts_ordered, no_fault_found, follow_up_required]
+    on_failure: quarantine
+
+  foreign_keys:
+    id: CAND-FK
+    relations:
+      - child: events.equipment_id
+        parent: equipment.equipment_id
+      - child: maintenance.equipment_id
+        parent: equipment.equipment_id
+      - child: maintenance.event_id
+        parent: events.event_id
+    on_failure: quarantine
+
+evolutions:
+  optional_columns:
+    - table: maintenance
+      column: source_system
+      decision: info
+      note: "Nouvelle colonne traçabilité — acceptable si documentée"
+
+outputs:
+  findings: output/candidate_qualification/candidate_findings.csv
+  report: output/candidate_qualification/qualification_report.json
+  decision: output/candidate_qualification/decision_candidate.md

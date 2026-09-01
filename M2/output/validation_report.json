@@ -1,0 +1,36 @@
+{
+  "status": "completed",
+  "sources": {
+    "equipment": {
+      "rows": 420,
+      "sha256": "d8c51e4cb152107fa5c7a27ae00f96afb19d83f8d92a9c220d0d1f4528c885a0"
+    },
+    "events": {
+      "rows": 520,
+      "sha256": "4a7d3b5178562a5666e20baad4fe2103f72532296edaf7b26109c2a6edd6872a"
+    },
+    "maintenance": {
+      "rows": 1800,
+      "sha256": "635d354bb8ce13b617c5289920ab5a2237191b220b667b0c339a47ce12f247c1"
+    }
+  },
+  "summary": {
+    "passed": 9,
+    "failed": 1,
+    "quarantined_rows": 37,
+    "pii_hits": 3,
+    "processed_rows": {
+      "equipment": 411,
+      "events": 502,
+      "maintenance": 1738
+    }
+  },
+  "decision": "utilisable sous conditions",
+  "decision_reason": "Anomalies isolées en quarantaine et/ou PII masquées ; ne pas réutiliser les notes brutes ; contrôler les FK restantes avant M3.",
+  "outputs": {
+    "processed": "output/processed",
+    "quarantine": "output/quarantine.csv",
+    "audit_report": "reports/audit_report.md",
+    "pii_findings": "reports/pii_findings.md"
+  }
+}

@@ -1,0 +1,18 @@
+source_file,row_identifier,rule_id,column,observed_value,reason,decision
+maintenance_batch_02.csv,-,CAND-INFO,source_system,gmao-v2,colonne facultative nouvelle — évolution acceptable,info
+equipment_update.csv,EQ-M2X-002,CAND-DUP,equipment_id,EQ-M2X-002,identifiant dupliqué,quarantine
+equipment_update.csv,EQ-M2X-002,CAND-DUP,equipment_id,EQ-M2X-002,identifiant dupliqué,quarantine
+events_batch_02.csv,EVT-2026S1-B002,CAND-DUP,event_id,EVT-2026S1-B002,identifiant dupliqué,quarantine
+events_batch_02.csv,EVT-2026S1-B002,CAND-DUP,event_id,EVT-2026S1-B002,identifiant dupliqué,quarantine
+maintenance_batch_02.csv,MNT-2026S1-B0002,CAND-DUP,maintenance_id,MNT-2026S1-B0002,identifiant dupliqué,quarantine
+maintenance_batch_02.csv,MNT-2026S1-B0002,CAND-DUP,maintenance_id,MNT-2026S1-B0002,identifiant dupliqué,quarantine
+events_batch_02.csv,EVT-2026S1-0001,CAND-COLLISION,event_id,EVT-2026S1-0001,collision avec événement publié,block
+maintenance_batch_02.csv,MNT-2026S1-0001,CAND-COLLISION,maintenance_id,MNT-2026S1-0001,collision avec maintenance publiée,block
+equipment_update.csv,EQ-M2X-007,CAND-DOM,criticality,urgent,"valeur hors domaine attendu ['critical', 'high', 'low', 'medium']",quarantine
+events_batch_02.csv,EVT-2026S1-B007,CAND-DOM,severity,CRITICAL,"valeur hors domaine attendu ['critical', 'high', 'low', 'medium']",quarantine
+events_batch_02.csv,EVT-2026S1-B006,CAND-DOM,event_type,inspection,"valeur hors domaine attendu ['alert', 'incident', 'intervention', 'observation']",quarantine
+events_batch_02.csv,EVT-2026S1-B004,CAND-FK,equipment_id,EQ-UNKNOWN-999,référence absente dans la table parente,quarantine
+maintenance_batch_02.csv,MNT-2026S1-B0004,CAND-FK,equipment_id,EQ-UNKNOWN-999,référence absente dans la table parente,quarantine
+maintenance_batch_02.csv,MNT-2026S1-B0084,CAND-FK,equipment_id,EQ-UNKNOWN-999,référence absente dans la table parente,quarantine
+maintenance_batch_02.csv,MNT-2026S1-B0164,CAND-FK,equipment_id,EQ-UNKNOWN-999,référence absente dans la table parente,quarantine
+maintenance_batch_02.csv,MNT-2026S1-B0004,CAND-FK,event_id,EVT-UNKNOWN-999,référence absente dans la table parente,quarantine

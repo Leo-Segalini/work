@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-08-31T07:21:23.861332+00:00",
+  "candidate_id": "diagops-2026-S1-m2-candidate-r2",
+  "inputs": {
+    "published": "/Users/segalini-briant/Documents/GitHub/atlas-cisia-s04/data_pack/2026-S1",
+    "candidate": "/Users/segalini-briant/Documents/GitHub/atlas-cisia-s04/data_pack/2026-S1/m2_candidate_release",
+    "rules": "aller_plus_loin/config/quality_rules.yaml"
+  },
+  "outputs": {
+    "findings": "/Users/segalini-briant/Documents/GitHub/atlas-cisia-s04/work/M2/output/candidate_qualification/candidate_findings.csv",
+    "report": "/Users/segalini-briant/Documents/GitHub/atlas-cisia-s04/work/M2/output/candidate_qualification/qualification_report.json",
+    "decision": "/Users/segalini-briant/Documents/GitHub/atlas-cisia-s04/work/M2/output/candidate_qualification/decision_candidate.md"
+  },
+  "decision": "REJECTED",
+  "blocking": 16
+}
