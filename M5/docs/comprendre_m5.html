@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comprendre DiagOps M5 — guide visuel</title>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+  </script>
+  <style>
+    :root {
+      --bg: #f6f3ee;
+      --ink: #1c1917;
+      --muted: #57534e;
+      --card: #fffdf9;
+      --line: #d6d3d1;
+      --blue: #1d4ed8;
+      --green: #047857;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --violet: #5b21b6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, #e8eefc 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, #fce7d6 0%, transparent 35%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    header {
+      padding: 2.5rem 1.5rem 1.5rem;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: -0.03em;
+      margin: 0 0 0.5rem;
+    }
+    header p { color: var(--muted); margin: 0; max-width: 42rem; }
+    nav.toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+    nav.toc a {
+      text-decoration: none;
+      color: var(--blue);
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+    section.card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.25rem 1.4rem 1.4rem;
+      box-shadow: 0 8px 24px rgb(28 25 23 / 0.04);
+    }
+    section.card h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+    section.card h3 {
+      margin: 1.1rem 0 0.4rem;
+      font-size: 1.05rem;
+    }
+    .lead {
+      font-size: 1.05rem;
+      background: #f0fdf4;
+      border-left: 4px solid var(--green);
+      padding: 0.8rem 1rem;
+      border-radius: 0 10px 10px 0;
+      margin: 0 0 1rem;
+    }
+    .warn {
+      background: #fff7ed;
+      border-left: 4px solid var(--amber);
+      padding: 0.8rem 1rem;
+      border-radius: 0 10px 10px 0;
+      margin: 1rem 0 0;
+    }
+    .mermaid {
+      background: #fafaf9;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin-top: 0.75rem;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 0.55rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f5f5f4; }
+    code, .path {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86em;
+      background: #f5f5f4;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+    }
+    pre {
+      background: #1c1917;
+      color: #fafaf9;
+      padding: 1rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.75rem;
+    }
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.85rem;
+      background: #fff;
+    }
+    .pill strong { display: block; margin-bottom: 0.25rem; }
+    .step-num {
+      display: inline-flex;
+      width: 1.6rem;
+      height: 1.6rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--violet);
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-right: 0.35rem;
+    }
+    ol.howto { padding-left: 1.1rem; }
+    ol.howto li { margin: 0.45rem 0; }
+    footer {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 1.5rem 2.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    a { color: var(--blue); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Comprendre DiagOps M5</h1>
+    <p>
+      Guide simple : à quoi sert le module, ce qu’on a construit, comment marche
+      Prometheus, et <strong>comment modifier la timeline</strong> le jour du game day.
+    </p>
+    <nav class="toc" aria-label="Sommaire">
+      <a href="#quoi">1. En une phrase</a>
+      <a href="#archi">2. Architecture</a>
+      <a href="#flux">3. Flux livraison</a>
+      <a href="#gameday">4. Game day</a>
+      <a href="#timeline">5. Modifier la timeline</a>
+      <a href="#prometheus">6. Prometheus</a>
+      <a href="#lancer">7. Lancer</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card" id="quoi">
+      <h2>1. En une phrase</h2>
+      <p class="lead">
+        DiagOps est un assistant de maintenance industrielle. En <strong>M5</strong>,
+        on ne crée pas une IA plus intelligente : on apprend à
+        <strong>déployer</strong>, <strong>surveiller</strong> et
+        <strong>réparer</strong> la version déjà faite en M4.
+      </p>
+      <div class="grid-2">
+        <div class="pill">
+          <strong>Ce qu’on protège</strong>
+          Une version saine appelée <code>diagops-m4-reference-r1</code>.
+          On peut toujours y revenir (rollback).
+        </div>
+        <div class="pill">
+          <strong>Ce qu’on prouve</strong>
+          Si ça casse, on le <em>détecte</em> (métriques), on <em>décide</em>,
+          on <em>restaure</em>, et on écrit l’histoire dans la timeline.
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="archi">
+      <h2>2. Architecture (3 briques)</h2>
+      <div class="mermaid">
+flowchart LR
+  subgraph Toi
+    A[Terminal / curl]
+    T[timeline.md]
+  end
+  subgraph Compose["Docker Compose — labo local"]
+    I[Indexer<br/>construit l'index]
+    API[API FastAPI<br/>:8000]
+    P[Prometheus<br/>:9090]
+  end
+  D[(data_pack<br/>lecture seule)]
+  Art[(artifacts/<br/>candidats + history)]
+
+  D --> I
+  I --> Art
+  Art --> API
+  D --> API
+  API -->|/metrics toutes les 15s| P
+  A -->|health / version| API
+  A --> T
+  P -->|graphiques| Toi
+      </div>
+      <table>
+        <thead>
+          <tr><th>Brique</th><th>Rôle en français</th><th>URL</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>API</strong></td>
+            <td>Le service DiagOps (vivant ? prêt ? quelle version ?)</td>
+            <td><a href="http://127.0.0.1:8000/health/ready">:8000</a></td>
+          </tr>
+          <tr>
+            <td><strong>Prometheus</strong></td>
+            <td>Le tableau de bord qui lit les métriques toutes les 15 s</td>
+            <td><a href="http://127.0.0.1:9090">:9090</a></td>
+          </tr>
+          <tr>
+            <td><strong>Indexer</strong></td>
+            <td>Fabrique un index documentaire <em>candidat</em> sans casser le sain</td>
+            <td>one-shot au démarrage Compose</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" id="flux">
+      <h2>3. Flux de livraison (idée centrale)</h2>
+      <div class="mermaid">
+flowchart TD
+  S[Version SAINE<br/>diagops-m4-reference-r1]
+  C[Candidat dans artifacts/candidates]
+  G{Gate CI<br/>passed ?}
+  H[Décision HUMAINE]
+  P[Promotion<br/>current.json]
+  R[Rollback<br/>si incident]
+
+  S --> C
+  C --> G
+  G -->|non| X[STOP — pas de promote]
+  G -->|oui| H
+  H -->|OK| P
+  P -->|panne| R
+  R --> S
+      </div>
+      <p>
+        Analogie : la version saine = <strong>dernière sauvegarde qui marche</strong>.
+        Un candidat = une nouvelle version en test. Le <strong>gate</strong> = contrôle qualité.
+        Tu ne remplaces la sauvegarde que si tu le décides.
+      </p>
+    </section>
+
+    <section class="card" id="gameday">
+      <h2>4. Game day — ce qui se passe</h2>
+      <div class="mermaid">
+sequenceDiagram
+  participant F as Formateur
+  participant Toi as Toi
+  participant API as API :8000
+  participant Prom as Prometheus
+  participant TL as timeline.md
+
+  Note over Toi,Prom: Avant : stack allumée, graph ouvert
+  F->>API: Injecte une panne
+  Toi->>TL: Note T0 (heure UTC)
+  Toi->>API: curl /health/ready
+  API-->>Toi: 503 = pas prêt
+  Prom-->>Toi: diagops_index_valid = 0 (~15s)
+  Toi->>TL: Ligne détection + décision
+  Toi->>API: Clear faute OU rollback
+  API-->>Toi: 200 = rétabli
+  Toi->>TL: Ligne restauration + vérif
+      </div>
+      <p>
+        Objectifs chrono : détection &lt; 2 min · décision &lt; 5 min · restauration &lt; 10 min.
+        Guide détaillé : <span class="path">game_day/JOUR_J.md</span>
+      </p>
+    </section>
+
+    <section class="card" id="timeline">
+      <h2>5. La timeline — c’est quoi ? Comment la modifier ?</h2>
+      <p class="lead">
+        La timeline n’est <strong>pas</strong> un programme qui tourne.
+        C’est un <strong>fichier texte Markdown</strong> : ton carnet de bord pendant l’incident.
+        Tu l’édites à la main (Cursor / VS Code), une ligne par événement.
+      </p>
+
+      <h3>Fichier</h3>
+      <p><span class="path">work/M5/game_day/timeline.md</span></p>
+
+      <h3>Structure d’une ligne</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Colonne</th>
+            <th>Que mettre</th>
+            <th>Exemple</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Horodatage UTC</td>
+            <td>Heure réelle en UTC</td>
+            <td><code>2026-09-07T14:02:15Z</code></td>
+          </tr>
+          <tr>
+            <td>Observation</td>
+            <td>Ce que tu as vu</td>
+            <td>ready passe à 503</td>
+          </tr>
+          <tr>
+            <td>Signal</td>
+            <td>Preuve système</td>
+            <td><code>diagops_index_valid=0</code></td>
+          </tr>
+          <tr>
+            <td>Décision</td>
+            <td>Ce que tu choisis</td>
+            <td>rollback vers release saine</td>
+          </tr>
+          <tr>
+            <td>Responsable</td>
+            <td>Qui agit</td>
+            <td>toi / Incident commander</td>
+          </tr>
+          <tr>
+            <td>Preuve</td>
+            <td>Où c’est visible</td>
+            <td>curl, Prometheus, capture</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Comment modifier (pas à pas)</h3>
+      <ol class="howto">
+        <li>
+          <span class="step-num">1</span>
+          Ouvre <span class="path">work/M5/game_day/timeline.md</span> dans Cursor.
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          Dans un terminal, prends l’heure UTC :
+          <pre><code>date -u +"%Y-%m-%dT%H:%M:%SZ"</code></pre>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          Ajoute une <strong>nouvelle ligne</strong> dans le tableau (ne supprime pas les anciennes) :
+        </li>
+      </ol>
+      <pre><code>| 2026-09-07T14:02:15Z | ready 503 | index_valid=0 | Je clear la faute | Moi | curl + Prometheus |</code></pre>
+      <ol class="howto" start="4">
+        <li>
+          <span class="step-num">4</span>
+          Enregistre le fichier (Cmd+S). C’est tout — pas de “lancer la timeline”.
+        </li>
+      </ol>
+
+      <div class="warn">
+        <strong>Les lignes déjà présentes</strong> = exercice d’entraînement du 7 sept.
+        Le jour J, tu peux les garder comme exemple et
+        <strong>ajouter</strong> les nouvelles lignes de l’incident réel en dessous
+        (ou remplacer la section si le formateur demande une timeline “propre”).
+      </div>
+
+      <h3>Obtenir l’heure UTC facilement</h3>
+      <pre><code># macOS / Linux
+date -u +"%Y-%m-%dT%H:%M:%SZ"
+
+# pendant un test
+curl -s -w "\n%{http_code}\n" http://127.0.0.1:8000/health/ready
+# → note l’heure + le code HTTP dans timeline.md</code></pre>
+    </section>
+
+    <section class="card" id="prometheus">
+      <h2>6. Prometheus — à quoi ça sert</h2>
+      <div class="mermaid">
+flowchart LR
+  API["API /metrics<br/>diagops_index_valid<br/>diagops_ready"]
+  P[Prometheus<br/>copie toutes les 15s]
+  G[Graph<br/>ligne / créneau]
+
+  API --> P --> G
+      </div>
+      <p>
+        <strong>Ligne droite à 1</strong> = système sain <em>maintenant</em> (ou tu regardes trop tard).
+        Pour voir un creux : ouvre le graph <em>avant</em> d’injecter, plage
+        <strong>Last 5 minutes</strong>, requête <code>diagops_index_valid</code>.
+      </p>
+      <div class="mermaid">
+xychart-beta
+  title "Forme attendue pendant un drill"
+  x-axis [T0, +15s, +30s, +60s, +90s, +105s]
+  y-axis "index_valid" 0 --> 1
+  line [1, 0, 0, 0, 0, 1]
+      </div>
+      <p style="color: var(--muted); font-size: 0.9rem;">
+        Schéma pédagogique : créneau 1→0→1 (pas une courbe lisse).
+      </p>
+    </section>
+
+    <section class="card" id="lancer">
+      <h2>7. Commandes pour lancer / t’entraîner</h2>
+      <pre><code>cd work/M5
+source .venv/bin/activate
+
+# Allumer la stack
+docker compose -f deploy/compose.yaml up -d
+
+# Ouvrir Prometheus dans le navigateur
+open http://127.0.0.1:9090
+# Graph → Last 5 minutes → diagops_index_valid → Execute
+
+# Drill 2 min (timeline à compléter toi-même pendant)
+./pipelines/run_gameday_drill.sh
+
+# Pendant le drill : ajoute des lignes dans game_day/timeline.md</code></pre>
+
+      <h3>Fichiers utiles</h3>
+      <table>
+        <thead><tr><th>Fichier</th><th>Pour quoi</th></tr></thead>
+        <tbody>
+          <tr><td><span class="path">game_day/JOUR_J.md</span></td><td>Procédure le jour de l’examen / game day</td></tr>
+          <tr><td><span class="path">game_day/timeline.md</span></td><td>Carnet d’événements (à éditer)</td></tr>
+          <tr><td><span class="path">game_day/plan.md</span></td><td>Rôles, signaux, rollback</td></tr>
+          <tr><td><span class="path">docs/runbook.md</span></td><td>Mode d’emploi exploitation</td></tr>
+          <tr><td><span class="path">pipelines/run_gameday_drill.sh</span></td><td>Entraînement incident 2 min</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    DiagOps S04 — Module 5 · page pédagogique · ouvrir ce fichier dans un navigateur
+    (<span class="path">work/M5/docs/comprendre_m5.html</span>).
+  </footer>
+</body>
+</html>
